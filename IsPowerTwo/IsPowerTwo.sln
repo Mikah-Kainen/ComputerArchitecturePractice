@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30225.117
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IsPowerTwo", "IsPowerTwo\IsPowerTwo.csproj", "{64CCABE6-D1B5-480D-ADDE-3E84F746AAD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTest", "UnitTest\UnitTest.csproj", "{42A17C77-027B-49CC-A4AC-337F56620966}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{64CCABE6-D1B5-480D-ADDE-3E84F746AAD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64CCABE6-D1B5-480D-ADDE-3E84F746AAD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64CCABE6-D1B5-480D-ADDE-3E84F746AAD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64CCABE6-D1B5-480D-ADDE-3E84F746AAD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42A17C77-027B-49CC-A4AC-337F56620966}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42A17C77-027B-49CC-A4AC-337F56620966}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42A17C77-027B-49CC-A4AC-337F56620966}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42A17C77-027B-49CC-A4AC-337F56620966}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01AD6B4C-F4A7-4796-8BC3-3D056C0E0AE6}
+	EndGlobalSection
+EndGlobal
