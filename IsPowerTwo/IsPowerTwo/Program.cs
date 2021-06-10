@@ -23,11 +23,11 @@ namespace IsPowerTwo
             string binary = Convert.ToString(number, 2);
 
             bool wasOneFound = false;
-            foreach(char bin in binary)
+            foreach (char bin in binary)
             {
-                if(bin == '1')
+                if (bin == '1')
                 {
-                    if(wasOneFound)
+                    if (wasOneFound)
                     {
                         return false;
                     }
@@ -41,7 +41,7 @@ namespace IsPowerTwo
         public static bool SecondTry(int number)
         {
             int wall = 1;
-            while(wall < number)
+            while (wall < number)
             {
                 wall = wall << 1;
             }
@@ -63,12 +63,12 @@ namespace IsPowerTwo
         public static int ClosestPowerOf2(int number)
         {
             int wall = 1;
-            while(wall <= number)
+            while (wall <= number)
             {
                 wall = wall << 1;
             }
 
-            if(wall - number > number - (wall >> 1))
+            if (wall - number > number - (wall >> 1))
             {
                 return wall >> 1;
             }
@@ -103,7 +103,7 @@ namespace IsPowerTwo
             int mask = 1 << index;
             number |= mask;
 
-            if(shouldOne)
+            if (shouldOne)
             {
                 return number;
             }
@@ -114,7 +114,7 @@ namespace IsPowerTwo
         public static byte[] IntToByteArray(int number)
         {
             byte[] returnValue = new byte[sizeof(int)];
-            for(int i = 0; i < returnValue.Length; i ++)
+            for (int i = 0; i < returnValue.Length; i++)
             {
                 returnValue[i] = GetByte(number, i);
             }
@@ -140,14 +140,14 @@ namespace IsPowerTwo
 
         public unsafe static bool IsPalindrome(string word)
         {
-            fixed(char* location = word)
+            fixed (char* location = word)
             {
                 char* current = location;
                 char* target = current + word.Length;
                 int currentIndex = word.Length - 1;
-                while(current < target)
+                while (current < target)
                 {
-                    if(*current != word[currentIndex])
+                    if (*current != word[currentIndex])
                     {
                         return false;
                     }
@@ -177,7 +177,7 @@ namespace IsPowerTwo
 
             int command = info[3];
 
-            switch((Commands)command)
+            switch ((Commands)command)
             {
                 case Commands.Add:
                     returnValue = info[1] + info[0];
@@ -220,14 +220,14 @@ namespace IsPowerTwo
 
         public static byte Subtract(byte left, byte right)
         {
-            return (byte)(left + -1 *right);
+            return (byte)(left + -1 * right);
         }
 
         public static byte Divide(byte left, byte right)
         {
             byte currentNum = left;
             byte currentIterations = 0;
-            while(currentNum >= right)
+            while (currentNum >= right)
             {
                 currentIterations++;
                 currentNum -= right;
@@ -245,11 +245,30 @@ namespace IsPowerTwo
             return currentNum;
         }
 
-
-
         public static void SMath(byte command)
         {
-            ~~
+            switch ((Commands)command)
+            {
+                case Commands.Add:
+
+                    break;
+
+                case Commands.Sub:
+
+                    break;
+
+                case Commands.Mul:
+
+                    break;
+
+                case Commands.Div:
+
+                    break;
+
+                case Commands.Mod:
+
+                    break;
+            }
 
         }
 
