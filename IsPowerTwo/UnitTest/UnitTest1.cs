@@ -1,6 +1,6 @@
 
 using IsPowerTwo;
-
+using System.Collections.Generic;
 using Xunit;
 
 namespace UnitTest
@@ -189,13 +189,6 @@ namespace UnitTest
             Assert.Equal(0x1, Program.DoMath(0x04000703));
         }
 
-        [Fact]
-
-        public void DoesDoMathStackWork()
-        {
-
-        }
-
 
         [Theory]
         [InlineData("abcba", true)]
@@ -205,6 +198,35 @@ namespace UnitTest
         public void DoesIsPalindromeWork(string data, bool expected)
         {
             Assert.Equal(expected, Program.IsPalindrome(data));
+        }
+
+        [Theory]
+        [InlineData(10, 2)]
+        [InlineData(6, 3)]
+
+        public void DoesSMathWork(byte left, byte right)
+        {
+            Stack<byte> testStack = new Stack<byte>();
+            for(int i = 0; i < 5; i ++)
+            {
+                testStack.Push(right);
+                testStack.Push(left);
+            }
+
+            Program.SMath(Program.Commands.Add);
+            Assert.Equal(testStack.Pop(), left + right);
+
+            Program.SMath(Program.Commands.Sub);
+            Assert.Equal(testStack.Pop(), left - right);
+
+            Program.SMath(Program.Commands.Mul);
+            Assert.Equal(testStack.Pop(), left * right);
+
+            Program.SMath(Program.Commands.Div);
+            Assert.Equal(testStack.Pop(), left / right);
+
+            Program.SMath(Program.Commands.Mod);
+            Assert.Equal(testStack.Pop(), left % right);
         }
 
         /*

@@ -159,7 +159,7 @@ namespace IsPowerTwo
             return true;
         }
 
-        enum Commands
+        public enum Commands
         {
             Add = 0x0,
             Sub = 0x1,
@@ -245,28 +245,28 @@ namespace IsPowerTwo
             return currentNum;
         }
 
-        public static void SMath(byte command)
+        public static void SMath(Commands command)
         {
-            switch ((Commands)command)
+            switch (command)
             {
                 case Commands.Add:
-
+                    SAdd();
                     break;
 
                 case Commands.Sub:
-
+                    SSub();
                     break;
 
                 case Commands.Mul:
-
+                    SMult();
                     break;
 
                 case Commands.Div:
-
+                    SDiv();
                     break;
 
                 case Commands.Mod:
-
+                    SMod();
                     break;
             }
 
