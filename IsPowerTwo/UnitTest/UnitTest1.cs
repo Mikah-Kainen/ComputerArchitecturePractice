@@ -5,7 +5,7 @@ using Xunit;
 
 namespace UnitTest
 {
-    public class UnitTest1
+    public unsafe class UnitTest1
     {
         [Fact]
         public void Test1()
@@ -155,7 +155,7 @@ namespace UnitTest
         [InlineData(5, 5)]
         public void DoesSubtractWork(byte left, byte right)
         {
-            Assert.Equal(Program.Subtract(left, right), left - right);
+            Assert.Equal(Program.Subtract(left, right), (byte)(left - right));
         }
 
 
@@ -203,31 +203,45 @@ namespace UnitTest
         [Theory]
         [InlineData(10, 2)]
         [InlineData(6, 3)]
+        [InlineData(4, 8)]
 
         public void DoesSMathWork(byte left, byte right)
         {
-            Stack<byte> testStack = new Stack<byte>();
             for(int i = 0; i < 5; i ++)
             {
-                testStack.Push(right);
-                testStack.Push(left);
+                Program.stack.Push(right);
+                Program.stack.Push(left);
             }
 
             Program.SMath(Program.Commands.Add);
-            Assert.Equal(testStack.Pop(), left + right);
+            Assert.Equal(Program.stack.Pop(), left + right);
 
             Program.SMath(Program.Commands.Sub);
-            Assert.Equal(testStack.Pop(), left - right);
+            Assert.Equal(Program.stack.Pop(), (byte)(left - right));
 
             Program.SMath(Program.Commands.Mul);
-            Assert.Equal(testStack.Pop(), left * right);
+            Assert.Equal(Program.stack.Pop(), left * right);
 
             Program.SMath(Program.Commands.Div);
-            Assert.Equal(testStack.Pop(), left / right);
+            Assert.Equal(Program.stack.Pop(), left / right);
 
             Program.SMath(Program.Commands.Mod);
-            Assert.Equal(testStack.Pop(), left % right);
+            Assert.Equal(Program.stack.Pop(), left % right);
         }
+
+        [Theory]
+        [InlineData(new byte[] { 0x1, 0x2, 0x3, 0x4, 0x0 }, 0x5, 0xA)]
+        [InlineData(new byte[] {0x5, 0x10, 0x1}, 0x3, 0x16)]
+        
+
+        public void DoesGetSumWork(byte[] array, byte length, byte expected)
+        {
+            fixed (byte* pointer = array)
+            {
+                Assert.Equal(expected, Program.GetSum(pointer, length));
+            }
+        }
+
 
         /*
 

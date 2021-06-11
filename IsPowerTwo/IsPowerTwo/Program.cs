@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IsPowerTwo
 {
-    public class Program
+    public unsafe class Program
     {
         public static Stack<byte> stack = new Stack<byte>();
 
@@ -35,7 +35,6 @@ namespace IsPowerTwo
                 }
             }
             return true;
-
         }
 
         public static bool SecondTry(int number)
@@ -220,7 +219,7 @@ namespace IsPowerTwo
 
         public static byte Subtract(byte left, byte right)
         {
-            return (byte)(left + -1 * right);
+            return (byte)(left - right);
         }
 
         public static byte Divide(byte left, byte right)
@@ -269,9 +268,7 @@ namespace IsPowerTwo
                     SMod();
                     break;
             }
-
         }
-
 
         public static void SAdd()
         {
@@ -280,7 +277,10 @@ namespace IsPowerTwo
 
         public static void SSub()
         {
-            stack.Push((byte)Subtract(stack.Pop(), stack.Pop()));
+            byte left = stack.Pop();
+            byte right = stack.Pop();
+            byte returnValue = (byte)(left + ~(right - 1));
+            stack.Push(returnValue);
         }
 
         public static void SMult()
@@ -320,5 +320,70 @@ namespace IsPowerTwo
             }
             stack.Push(currentNum);
         }
+
+        public unsafe static int GetSum(byte* pointer, byte length)
+        {
+            int returnValue = 0;
+            for (int i = 0; i < length; i++)
+            {
+                returnValue += *pointer;
+                pointer++;
+            }
+
+            return returnValue;
+        }
+
+        /*
+        Add Sub Mul Div
+        And Or Xor Not Eq
+        Goto Goeq 
+        Set
+
+        */
+
+
+
+
+
+        /*
+        r29 = stackPointer
+        set r4 r29 //r4 is the copy pointer to go back to the start of the array
+
+        set r0 0
+        set r1 1
+        set r2 100
+        set r3 0xab
+
+
+        loop
+
+        seti r29 r0
+        sub r29 r29 r1
+
+        add r0 r0 r1
+        goeq leave r0 r2
+
+        goto loop 
+
+        leave
+
+        set r5 0
+        loop2
+
+        load r0 r4
+        add r5 r5 r0
+        add r4 r4 r1
+        
+        goeq finalCount r29 r4
+        goto loop2
+
+
+        finalCount
+        str r3 r5
+
+        end
+        goto end
+
+        */
     }
 }
