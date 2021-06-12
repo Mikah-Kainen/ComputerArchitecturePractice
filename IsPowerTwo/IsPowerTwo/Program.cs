@@ -342,28 +342,45 @@ namespace IsPowerTwo
         */
 
 
+        
 
 
 
         /*
-        r29 = stackPointer
-        set r4 r29 //r4 is the copy pointer to go back to the start of the array
+        add 0
+        sub 1
+        mul 2
+        div 3
+        mod 4
+        setd 5
+        set 6
+        eq 7
+        goto 8
+        goeq 9
+        load A
+        str B
+        
+         
+         
+         
+        //rA = stackPointer
+   4     set r4 rA         // 0x06 0x04 0x0A
+   
+   8     setd r0 0         // 0x05 0x00 0x0000
+   C    setd r1 1         // 0x05 0x01 0x0001
+  10    setd r2 100       // 0x05 0x02 0x0100
+  14    setd r3 0xab      // 0x05 0x03 0x00AB
+                          
+                          
+        loop              
+                          
+  18    set rA r0         //0x06 0x0A 0x00
+  1C    sub rA rA r1      //0x01 0x0A 0x0A 0x01
+                          
+  20    add r0 r0 r1      //0x00 0x00 0x00 0x01
+  24    goeq leave r0 r2  //0x09 0x28 0x00 0x02
 
-        set r0 0
-        set r1 1
-        set r2 100
-        set r3 0xab
-
-
-        loop
-
-        seti r29 r0
-        sub r29 r29 r1
-
-        add r0 r0 r1
-        goeq leave r0 r2
-
-        goto loop 
+  28    goto loop         //0x08 0x14
 
         leave
 
