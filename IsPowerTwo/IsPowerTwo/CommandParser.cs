@@ -1,49 +1,121 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace IsPowerTwo
 {
 
+    public enum Tokens
+    {
+        ADD,
+        SUB,
+        MULT,
+        DIV,
+        LABEL,
+        COMMENT,
+        GOTO,
+        GOTR,
+        NOP,
+        SETI,
+        SET,
+        LOAD,
+        STR,
+        MOD,
+        EQ, 
+        EMPTY
+    }
+
+    public class TokenInfo
+    {
+        public string Input { get; private set; }
+        public Tokens Token { get; set; }
+
+        public TokenInfo(string input, Tokens token)
+        {
+            Input = input;
+            Token = token;
+        }
+
+    }
+
     public class CommandParser
     {
-        public Dictionary<string, byte> CommandToByte = new Dictionary<string, byte>()
-        {
-            ["nop"] = 0x00,
+        //public Dictionary<string, byte> CommandToByte = new Dictionary<string, byte>()
+        //{
+        //    ["nop"] = 0x00,
 
-            ["add"] = 0x01,
-            ["sub"] = 0x02,
-            ["mul"] = 0x03,
-            ["div"] = 0x04,
-            ["mod"] = 0x05,
-            ["eq"] = 0x06,
+        ////    ["add"] = 0x01,
+        //    ["sub"] = 0x02,
+        //    ["mul"] = 0x03,
+        //    ["div"] = 0x04,
+        //    ["mod"] = 0x05,
+        //    ["eq"] = 0x06,
 
-            ["goto"] = 0x10,
-            ["gotr"] = 0x11,
+        //    ["goto"] = 0x10,
+        //    ["gotr"] = 0x11,
 
-            ["seti"] = 0x20,
-            ["set"] = 0x21,
-            ["load"] = 0x22,
-            ["str"] = 0x23,
-        };
+        //    ["seti"] = 0x20,
+        //    ["set"] = 0x21,
+        //    ["load"] = 0x22,
+        //    ["str"] = 0x23,
+        //};
 
-        public Dictionary<string, byte> RegisterToAddress = new Dictionary<string, byte>();
+        public Dictionary<string, short> GotoTracker;
+        Dictionary<string, Tokens> getToken;
 
+        short currentLocation;
+
+        //public Dictionary<string, byte> RegisterToAddress = new Dictionary<string, byte>();
+        //[(A-Z)*(a-z)*]*:
         CommandParser()
         {
+            //ADD + (R\d +) +(R\d +) +(R\d +) https://regexr.com/
+            //^(?i)(ADD) +(R\d+) +(R\d+) +(R\d+) https://regex101.com/
+            Regex re = new Regex(@"^Add +(R\d{1,2}) +(R\d{1,2}) +(R\d{1,2})");
+            var match = re.Match(" Add R12 R34 R 2");
+            for (int i = 1; i < match.Groups.Count; i++)
+            {
+                Console.WriteLine(match.Groups[i].ToString());
+            }
 
+            getToken = new Dictionary<string, Tokens>();
+            GotoTracker = new Dictionary<string, short>();
         }
 
-
-        public byte[] ParseCommand(string command)
+        public string[] SplitCommands(string input)
         {
-            byte[] returnArray = new byte[4];
-            string[] commandParts = command.Split(' ');
+            string[] commands = input.Split('\n');
 
-            returnArray[0] = CommandToByte[commandParts[0]];
-
-            return returnArray;
+            return commands;
         }
+
+        public TokenInfo GetTokenInfo(string input)
+        {
+            TokenInfo returnValue = new TokenInfo(input, getToken[input]);
+            if(returnValue.Token == Tokens.LABEL)
+            {
+                GotoTracker.Add(input, currentLocation);
+            }
+
+            return returnValue;
+        }
+        
+
+        //public void UseFunctions(string[] commands)
+        //{
+        //    foreach(string command in commands)
+        //    {
+        //        foreach(Regex reg in RegexOptions)
+        //        {
+        //            if(reg.Equals(command))
+        //            {
+        //                GetFunction[reg]((string)reg.Match(command));
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
     }
 
 

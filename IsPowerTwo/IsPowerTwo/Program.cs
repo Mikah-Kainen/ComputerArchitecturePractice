@@ -334,6 +334,9 @@ namespace IsPowerTwo
         }
 
 
+
+
+
         /*
         Add Sub Mul Div
         And Or Xor Not Eq
