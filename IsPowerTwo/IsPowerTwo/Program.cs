@@ -11,9 +11,8 @@ namespace IsPowerTwo
         {
             Console.WriteLine("Hello World!");
 
-            bool answer1 = SecondTry(32);
-            bool answer2 = SecondTry(128);
-            bool answer3 = SecondTry(122);
+            CommandParser test = new CommandParser();
+            test.GetToken("HI");
         }
 
 

@@ -6,26 +6,6 @@ using System.Text.RegularExpressions;
 namespace IsPowerTwo
 {
 
-    public enum Tokens
-    {
-        ADD,
-        SUB,
-        MULT,
-        DIV,
-        LABEL,
-        COMMENT,
-        GOTO,
-        GOTR,
-        NOP,
-        SETI,
-        SET,
-        LOAD,
-        STR,
-        MOD,
-        EQ, 
-        EMPTY
-    }
-
     public class TokenInfo
     {
         public string Input { get; private set; }
@@ -65,10 +45,11 @@ namespace IsPowerTwo
         Dictionary<string, Tokens> getToken;
 
         short currentLocation;
+        int totalTokens => (int)Tokens.EMPTY + 1;
 
         //public Dictionary<string, byte> RegisterToAddress = new Dictionary<string, byte>();
         //[(A-Z)*(a-z)*]*:
-        CommandParser()
+        public CommandParser()
         {
             //ADD + (R\d +) +(R\d +) +(R\d +) https://regexr.com/
             //^(?i)(ADD) +(R\d+) +(R\d+) +(R\d+) https://regex101.com/
@@ -81,6 +62,11 @@ namespace IsPowerTwo
 
             getToken = new Dictionary<string, Tokens>();
             GotoTracker = new Dictionary<string, short>();
+
+            for(int i = 0; i < totalTokens; i ++)
+            {
+                getToken.Add(((Tokens)i).ToString(), (Tokens)i);
+            }
         }
 
         public string[] SplitCommands(string input)
@@ -92,13 +78,41 @@ namespace IsPowerTwo
 
         public TokenInfo GetTokenInfo(string input)
         {
-            TokenInfo returnValue = new TokenInfo(input, getToken[input]);
+            TokenInfo returnValue = new TokenInfo(input, GetToken(input));
             if(returnValue.Token == Tokens.LABEL)
             {
                 GotoTracker.Add(input, currentLocation);
             }
 
             return returnValue;
+        }
+
+        public Tokens GetToken(string input)
+        {
+            if (getToken.ContainsKey(input))
+            {
+                return getToken[input];
+            }
+
+            List<Regex> superTemp = new List<Regex>();
+            foreach(var kvp in getToken)
+            {
+                Regex current = new Regex(@"^( *(?i)(" + kvp.Key + @"))");
+                superTemp.Add(current);
+                if(current.IsMatch(input))
+                {
+                    return kvp.Value;
+                }
+            }
+
+            Regex isLabel = new Regex(@":$");
+            if(isLabel.IsMatch(input))
+            {
+                GotoTracker.Add(input, currentLocation);
+                return Tokens.LABEL;
+            }
+            
+            return Tokens.EMPTY;
         }
         
 
