@@ -6,12 +6,12 @@ using System.Text.RegularExpressions;
 namespace IsPowerTwo
 {
 
-    public class TokenInfo
+    public class TokenData
     {
         public string Input { get; private set; }
         public Tokens Token { get; set; }
 
-        public TokenInfo(string input, Tokens token)
+        public TokenData(string input, Tokens token)
         {
             Input = input;
             Token = token;
@@ -42,6 +42,8 @@ namespace IsPowerTwo
         //};
 
         public Dictionary<string, short> GotoTracker;
+        public Dictionary<Tokens, Regex> GetRegex;
+
         Dictionary<string, Tokens> getToken;
 
         short currentLocation;
@@ -62,11 +64,26 @@ namespace IsPowerTwo
 
             getToken = new Dictionary<string, Tokens>();
             GotoTracker = new Dictionary<string, short>();
+            GetRegex = new Dictionary<Tokens, Regex>();
 
             for(int i = 0; i < totalTokens; i ++)
             {
                 getToken.Add(((Tokens)i).ToString(), (Tokens)i);
             }
+
+            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.SUB,   new Regex(@" *(?i)(SUB)  +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.MULT,  new Regex(@" *(?i)(MULT) +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.DIV,   new Regex(@" *(?i)(DIV)  +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.MOD,   new Regex(@" *(?i)(MOD)  +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.EQ,    new Regex(@" *(?i)(EQ)   +(R\d+) +(R\d+) +(R\d+)"));
+
+            GetRegex.Add(Tokens.GOTO,  new Regex(@" *(?i)(ADD)  +(\d+):$"));
+            GetRegex.Add(Tokens.GOTR,  new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
+
+            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
+            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
         }
 
         public string[] SplitCommands(string input)
@@ -74,17 +91,6 @@ namespace IsPowerTwo
             string[] commands = input.Split('\n');
 
             return commands;
-        }
-
-        public TokenInfo GetTokenInfo(string input)
-        {
-            TokenInfo returnValue = new TokenInfo(input, GetToken(input));
-            if(returnValue.Token == Tokens.LABEL)
-            {
-                GotoTracker.Add(input, currentLocation);
-            }
-
-            return returnValue;
         }
 
         public Tokens GetToken(string input)
@@ -114,7 +120,39 @@ namespace IsPowerTwo
             
             return Tokens.EMPTY;
         }
-        
+        public TokenData GetTokenData(string input)
+        {
+            if (getToken.ContainsKey(input))
+            {
+                return new TokenData(input, getToken[input]);
+            }
+
+            List<Regex> superTemp = new List<Regex>();
+            foreach (var kvp in getToken)
+            {
+                Regex current = new Regex(@"^( *(?i)(" + kvp.Key + @"))");
+                superTemp.Add(current);
+                if (current.IsMatch(input))
+                {
+                    return new TokenData(input, kvp.Value);
+                }
+            }
+
+            Regex isLabel = new Regex(@":$");
+            if (isLabel.IsMatch(input))
+            {
+                GotoTracker.Add(input, currentLocation);
+                return new TokenData(input, Tokens.LABEL);
+            }
+
+            return new TokenData(input, Tokens.EMPTY);
+        }
+
+        //public int ParseTokenData(TokenData input)
+        //{
+
+        //}
+
 
         //public void UseFunctions(string[] commands)
         //{
