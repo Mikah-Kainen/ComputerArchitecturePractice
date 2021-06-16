@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
+using SharedLibrary;
+using SharedLibrary.Instructions.MathInstructions;
 
 namespace IsPowerTwo
 {
-
     public class TokenData
     {
         public string Input { get; private set; }
@@ -42,48 +42,29 @@ namespace IsPowerTwo
         //};
 
         public Dictionary<string, short> GotoTracker;
-        public Dictionary<Tokens, Regex> GetRegex;
+        public Dictionary<Tokens, Func<string, byte[]>> ParseCommand;
 
         Dictionary<string, Tokens> getToken;
 
         short currentLocation;
         int totalTokens => (int)Tokens.EMPTY + 1;
 
-        //public Dictionary<string, byte> RegisterToAddress = new Dictionary<string, byte>();
-        //[(A-Z)*(a-z)*]*:
         public CommandParser()
         {
             //ADD + (R\d +) +(R\d +) +(R\d +) https://regexr.com/
             //^(?i)(ADD) +(R\d+) +(R\d+) +(R\d+) https://regex101.com/
-            Regex re = new Regex(@"^Add +(R\d{1,2}) +(R\d{1,2}) +(R\d{1,2})");
-            var match = re.Match(" Add R12 R34 R 2");
-            for (int i = 1; i < match.Groups.Count; i++)
-            {
-                Console.WriteLine(match.Groups[i].ToString());
-            }
 
             getToken = new Dictionary<string, Tokens>();
             GotoTracker = new Dictionary<string, short>();
-            GetRegex = new Dictionary<Tokens, Regex>();
+            ParseCommand = new Dictionary<Tokens, Func<string, byte[]>>();
 
-            for(int i = 0; i < totalTokens; i ++)
+            for (int i = 0; i < totalTokens; i++)
             {
                 getToken.Add(((Tokens)i).ToString(), (Tokens)i);
             }
 
-            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.SUB,   new Regex(@" *(?i)(SUB)  +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.MULT,  new Regex(@" *(?i)(MULT) +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.DIV,   new Regex(@" *(?i)(DIV)  +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.MOD,   new Regex(@" *(?i)(MOD)  +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.EQ,    new Regex(@" *(?i)(EQ)   +(R\d+) +(R\d+) +(R\d+)"));
 
-            GetRegex.Add(Tokens.GOTO,  new Regex(@" *(?i)(ADD)  +(\d+):$"));
-            GetRegex.Add(Tokens.GOTR,  new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
-
-            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
-            GetRegex.Add(Tokens.ADD,   new Regex(@" *(?i)(ADD)  +(R\d+) +(R\d+) +(R\d+)"));
+            ParseCommand.Add(Tokens.ADD, (input) => { ADD temp = new ADD(); temp.Parse(input); return temp.Emit(); });
         }
 
         public string[] SplitCommands(string input)
@@ -120,54 +101,34 @@ namespace IsPowerTwo
             
             return Tokens.EMPTY;
         }
-        public TokenData GetTokenData(string input)
-        {
-            if (getToken.ContainsKey(input))
-            {
-                return new TokenData(input, getToken[input]);
-            }
-
-            List<Regex> superTemp = new List<Regex>();
-            foreach (var kvp in getToken)
-            {
-                Regex current = new Regex(@"^( *(?i)(" + kvp.Key + @"))");
-                superTemp.Add(current);
-                if (current.IsMatch(input))
-                {
-                    return new TokenData(input, kvp.Value);
-                }
-            }
-
-            Regex isLabel = new Regex(@":$");
-            if (isLabel.IsMatch(input))
-            {
-                GotoTracker.Add(input, currentLocation);
-                return new TokenData(input, Tokens.LABEL);
-            }
-
-            return new TokenData(input, Tokens.EMPTY);
-        }
-
-        //public int ParseTokenData(TokenData input)
+        //public TokenData GetTokenData(string input)
         //{
-
-        //}
-
-
-        //public void UseFunctions(string[] commands)
-        //{
-        //    foreach(string command in commands)
+        //    if (getToken.ContainsKey(input))
         //    {
-        //        foreach(Regex reg in RegexOptions)
+        //        return new TokenData(input, getToken[input]);
+        //    }
+
+        //    List<Regex> superTemp = new List<Regex>();
+        //    foreach (var kvp in getToken)
+        //    {
+        //        Regex current = new Regex(@"^( *(?i)(" + kvp.Key + @"))");
+        //        superTemp.Add(current);
+        //        if (current.IsMatch(input))
         //        {
-        //            if(reg.Equals(command))
-        //            {
-        //                GetFunction[reg]((string)reg.Match(command));
-        //                break;
-        //            }
+        //            return new TokenData(input, kvp.Value);
         //        }
         //    }
+
+        //    Regex isLabel = new Regex(@":$");
+        //    if (isLabel.IsMatch(input))
+        //    {
+        //        GotoTracker.Add(input, currentLocation);
+        //        return new TokenData(input, Tokens.LABEL);
+        //    }
+
+        //    return new TokenData(input, Tokens.EMPTY);
         //}
+
     }
 
 

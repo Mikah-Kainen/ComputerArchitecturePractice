@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SharedLibrary;
 
 namespace IsPowerTwo
 {
@@ -13,6 +14,11 @@ namespace IsPowerTwo
 
             CommandParser test = new CommandParser();
             test.GetToken("HI");
+
+            string command = "Add R01 R02 R03";
+            Tokens commandToken = test.GetToken(command);
+            byte[] parsedCommand = test.ParseCommand[commandToken](command);
+            
         }
 
 

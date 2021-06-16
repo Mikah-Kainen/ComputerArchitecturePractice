@@ -9,14 +9,14 @@ namespace SharedLibrary.Instructions.MathInstructions
     public class ADD : BaseInstruction
     {
         public byte Destination;
-        public byte AddLeft;
-        public byte AddRight;
+        public byte LeftRegister;
+        public byte RightRegister;
 
         public override Regex Pattern => GetRegex[Tokens.ADD];
 
         public override string Op => Tokens.ADD.ToString();
 
-        public override byte OpByte => throw new NotImplementedException();
+        public override byte OpByte => 0x01;
 
         public ADD()
         {
@@ -24,18 +24,20 @@ namespace SharedLibrary.Instructions.MathInstructions
 
         public override byte[] Emit()
         {
-            return new byte[] { OpByte, Destination, AddLeft, AddRight };
+            return new byte[] { OpByte, Destination, LeftRegister, RightRegister };
         }
 
         public override bool Parse(string input)
         {
             string[] parse = Pattern.Split(input);
-            if(parse.Length < 5)
+            if(parse.Length != 5)
             {
-                return false;
+                throw new SystemException("IDK WHAT THIS COMMAND IS");
             }
 
-            Destination; 
+            Destination = byte.Parse(parse[1]);
+            LeftRegister = byte.Parse(parse[2]);
+            RightRegister = byte.Parse(parse[3]);
 
             return true;
         }

@@ -15,6 +15,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\IsPowerTwo\IsPowerTwo.csproj" />
+    <ProjectReference Include="..\SharedLibrary\SharedLibrary.csproj" />
   </ItemGroup>
 
 </Project>
