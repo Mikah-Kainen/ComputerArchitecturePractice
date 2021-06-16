@@ -25,6 +25,7 @@ namespace IsPowerTwo
     public class CommandParser
     {
 
+
         public Dictionary<string, short> GotoTracker;
         public Dictionary<Tokens, Func<string, byte[]>> ParseCommand;
 
@@ -58,12 +59,11 @@ namespace IsPowerTwo
 
             foreach (Type type in allInstructionTypes)
             {
-                Tokens currentToken = BaseInstruction.GetTokenFromType[type];
+                Tokens currentToken = Dictionaries.GetTokenFromType[type];
                 ParseCommand.Add(currentToken, (input) => 
                 { 
                     var temp = (BaseInstruction)Activator.CreateInstance(type); 
-                    temp.Parse(input); 
-                    return temp.Emit();
+                    return temp.Parse(input); 
                 });
             }
         }

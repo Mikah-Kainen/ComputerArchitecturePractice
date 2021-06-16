@@ -16,4 +16,5 @@ namespace SharedLibrary
         public static string padding = @"(?:0x)?f{0,4}";
         public static string memoryAddress = @"(?:0x)?(\d{0,4})";
     }
+
 }

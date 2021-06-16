@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 using SharedLibrary;
+using SharedLibrary.Instructions.MathInstructions;
 
 namespace IsPowerTwo
 {
@@ -16,6 +17,8 @@ namespace IsPowerTwo
 
             CommandParser test = new CommandParser();
             test.GetToken("HI");
+
+
 
             string command = "Add R01 R02 R03";
             Tokens commandToken = test.GetToken(command);

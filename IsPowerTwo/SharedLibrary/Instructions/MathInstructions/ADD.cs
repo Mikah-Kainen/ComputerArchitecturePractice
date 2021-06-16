@@ -8,38 +8,43 @@ namespace SharedLibrary.Instructions.MathInstructions
 {
     public class ADD : BaseInstruction
     {
-        public byte Destination;
-        public byte LeftRegister;
-        public byte RightRegister;
-
-        public override Regex Pattern => GetRegex[Tokens.ADD];
-
-        public override string Op => Tokens.ADD.ToString();
-
-        public override byte OpByte => 0x01;
-
         public ADD()
         {
+            Layout = new MathLayout(this.GetType());
         }
 
-        public override byte[] Emit()
-        {
-            return new byte[] { OpByte, Destination, LeftRegister, RightRegister };
-        }
+        //public byte Destination;
+        //public byte LeftRegister;
+        //public byte RightRegister;
 
-        public override bool Parse(string input)
-        {
-            string[] parse = Pattern.Split(input);
-            if(parse.Length != 5)
-            {
-                throw new SystemException("IDK WHAT THIS COMMAND IS");
-            }
+        //public override Regex Pattern => GetRegex[Tokens.ADD];
 
-            Destination = byte.Parse(parse[1]);
-            LeftRegister = byte.Parse(parse[2]);
-            RightRegister = byte.Parse(parse[3]);
+        //public override string Op => Tokens.ADD.ToString();
 
-            return true;
-        }
+        //public override byte OpByte => 0x01;
+
+        //public ADD()
+        //{
+        //}
+
+        //public override byte[] Emit()
+        //{
+        //    return new byte[] { OpByte, Destination, LeftRegister, RightRegister };
+        //}
+
+        //public override bool Parse(string input)
+        //{
+        //    string[] parse = Pattern.Split(input);
+        //    if(parse.Length != 5)
+        //    {
+        //        throw new SystemException("IDK WHAT THIS COMMAND IS");
+        //    }
+
+        //    Destination = byte.Parse(parse[1]);
+        //    LeftRegister = byte.Parse(parse[2]);
+        //    RightRegister = byte.Parse(parse[3]);
+
+        //    return true;
+        //}
     }
 }
