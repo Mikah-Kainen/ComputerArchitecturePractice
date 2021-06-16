@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
+
 using SharedLibrary;
 
 namespace IsPowerTwo
@@ -18,7 +20,11 @@ namespace IsPowerTwo
             string command = "Add R01 R02 R03";
             Tokens commandToken = test.GetToken(command);
             byte[] parsedCommand = test.ParseCommand[commandToken](command);
-            
+
+            Regex labelRegex = new Regex("(.*:)");
+
+            string temp = labelRegex.Match("asd;lfjkasd: :lkdsjf").Value;
+
         }
 
 

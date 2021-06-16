@@ -32,7 +32,7 @@ namespace CommandParser.tests
 
 
         [Theory]
-        [InlineData("Add R01 R02 R02", new byte[4] { 1, 1, 2, 3})]
+        [InlineData("Add R01 R02 R02", new byte[4] { 1, 1, 2, 2})]
         [InlineData("adD r1 r24 r31", new byte[4] { 1, 1, 24, 31})]
         [InlineData("ADD r1 r3 r2 ;asfdafadf", new byte[4] { 1, 1, 3, 2})]
         //[InlineData("ADDD r1 r1 r2", new byte[0] { })]
@@ -52,8 +52,8 @@ namespace CommandParser.tests
         {
             IsPowerTwo.CommandParser test = new IsPowerTwo.CommandParser();
 
-            Action<string> shouldThrow = (string input) => { test.ParseCommand[test.GetToken(input)](input); };
-            Assert.Throws(SystemException, shouldThrow(command));
+            Action shouldThrow = () => { test.ParseCommand[test.GetToken(command)](command); };
+            Assert.Throws<SystemException>(shouldThrow);
         }
     }
 }

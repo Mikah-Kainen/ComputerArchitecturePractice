@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using SharedLibrary;
 using SharedLibrary.Instructions.MathInstructions;
+using SharedLibrary.Instructions;
+using System.Reflection;
+using System.Linq;
 
 namespace IsPowerTwo
 {
@@ -21,25 +24,6 @@ namespace IsPowerTwo
 
     public class CommandParser
     {
-        //public Dictionary<string, byte> CommandToByte = new Dictionary<string, byte>()
-        //{
-        //    ["nop"] = 0x00,
-
-        ////    ["add"] = 0x01,
-        //    ["sub"] = 0x02,
-        //    ["mul"] = 0x03,
-        //    ["div"] = 0x04,
-        //    ["mod"] = 0x05,
-        //    ["eq"] = 0x06,
-
-        //    ["goto"] = 0x10,
-        //    ["gotr"] = 0x11,
-
-        //    ["seti"] = 0x20,
-        //    ["set"] = 0x21,
-        //    ["load"] = 0x22,
-        //    ["str"] = 0x23,
-        //};
 
         public Dictionary<string, short> GotoTracker;
         public Dictionary<Tokens, Func<string, byte[]>> ParseCommand;
@@ -54,6 +38,14 @@ namespace IsPowerTwo
             //ADD + (R\d +) +(R\d +) +(R\d +) https://regexr.com/
             //^(?i)(ADD) +(R\d+) +(R\d+) +(R\d+) https://regex101.com/
 
+            Type currentType = typeof(BaseInstruction);
+
+            Type[] allTypes = Assembly.GetAssembly(currentType).GetTypes();
+            Type[] allInstructionTypes = allTypes.Where(x => x.IsSubclassOf(currentType)).ToArray();
+
+            //BaseInstruction[] allInstructions = allInstructionTypes.Select(x => (BaseInstruction)Activator.CreateInstance(x)).ToArray();
+
+
             getToken = new Dictionary<string, Tokens>();
             GotoTracker = new Dictionary<string, short>();
             ParseCommand = new Dictionary<Tokens, Func<string, byte[]>>();
@@ -64,7 +56,16 @@ namespace IsPowerTwo
             }
 
 
-            ParseCommand.Add(Tokens.ADD, (input) => { ADD temp = new ADD(); temp.Parse(input); return temp.Emit(); });
+            foreach (Type type in allInstructionTypes)
+            {
+                Tokens currentToken = BaseInstruction.GetTokenFromType[type];
+                ParseCommand.Add(currentToken, (input) => 
+                { 
+                    var temp = (BaseInstruction)Activator.CreateInstance(type); 
+                    temp.Parse(input); 
+                    return temp.Emit();
+                });
+            }
         }
 
         public string[] SplitCommands(string input)
@@ -72,6 +73,15 @@ namespace IsPowerTwo
             string[] commands = input.Split('\n');
 
             return commands;
+        }
+
+        public void FirstPass(string[] commands)
+        {
+            Regex labelRegex = new Regex("(.*:)");
+            foreach(string command in commands)
+            {
+                string temp = labelRegex.Match(command).Value;
+            }
         }
 
         public Tokens GetToken(string input)
